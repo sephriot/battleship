@@ -1,6 +1,6 @@
 #: include plane.kv
 
-<Battleships>:
+<Battleship>:
     canvas.before:
         Color:
             rgb: (0.9, 0.9, 0.9)
@@ -30,7 +30,9 @@
         cols: 2
         size_hint: 1, 0.05
         TextInput:
-            id: game_id
+            id: gameId
             multiline: False
         Button:
             text: 'Start'
+            id: startGameButton
+            on_release: root.startButtonClick()
