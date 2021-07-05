@@ -7,9 +7,30 @@
         Rectangle:
             size: self.width, self.height
             pos: self.x, self.y
-
-    cols: 2
-    Plane:
-        id: player
-    Plane:
-        id: opponent
+    rows: 3
+    GridLayout:
+        cols: 2
+        size_hint: 1, 0.05
+        Label:
+            color: 0,0,0
+            text: 'Player1'
+            bold: True
+        Label:
+            color: 0,0,0
+            text: 'Player2'
+            bold: True
+    GridLayout:
+        cols: 2
+        size_hint: 1, 0.8
+        Plane:
+            id: player
+        Plane:
+            id: opponent
+    GridLayout:
+        cols: 2
+        size_hint: 1, 0.05
+        TextInput:
+            id: game_id
+            multiline: False
+        Button:
+            text: 'Start'
