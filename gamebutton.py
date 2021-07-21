@@ -14,24 +14,26 @@ class GameButton(Button):
         self.updateColor()
         self.sendMessage(self.coordinate)
 
+    def setWasHit(self, value=True):
+        self.wasHit = value
+        self.updateColor()
+
     def hit(self):
         self.isShip = True
-        self.wasHit = True
+        self.setWasHit()
         print("Hit")
-        self.updateColor()
 
     def miss(self):
         self.isShip = False
-        self.wasHit = True
+        self.setWasHit()
         print("Miss")
-        self.updateColor()
 
     def updateColor(self):
         if self.isShip and self.wasHit:
-            self.background_color = (0.9, 0, 0)
+            self.background_color = (0.9, 0, 0, 1)
         elif self.isShip and not self.wasHit:
-            self.background_color = (0, 0.9, 0)
+            self.background_color = (0, 0.9, 0, 1)
         elif not self.isShip and self.wasHit:
-            self.background_color = (0, 0, 0.9)
+            self.background_color = (0, 0, 0.9, 1)
         elif not self.isShip and not self.wasHit:
-            self.background_color = (0.9, 0.9, 0.9)
+            self.background_color = (0.9, 0.9, 0.9, 1)
