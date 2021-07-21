@@ -92,8 +92,3 @@ class BattleshipApp(App):
 
     def build(self):
         return Battleship()
-
-
-if __name__ == '__main__':
-    Config.read('config.ini')
-    BattleshipApp().run()
