@@ -1,7 +1,10 @@
 import asyncio
+import sys
 import time
 
 import websockets
+
+message = sys.argv[1]
 
 
 async def hello():
@@ -9,15 +12,16 @@ async def hello():
     async with websockets.connect(uri) as websocket:
         while True:
             now = time.strftime("%X")
-            print("Sending:", now)
-            await websocket.send(now)
+            print("Sending:", now, message)
+            await websocket.send(message)
             msg = await websocket.recv()
             print("Received:", msg)
-            await asyncio.sleep(1)
 
 
 asyncio.get_event_loop().run_until_complete(hello())
 
-
 # A ----> S -----> B
 # B -----> S -----> A
+
+# C ----> S -----> D
+# D -----> S -----> C
