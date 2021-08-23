@@ -1,16 +1,20 @@
+import asyncio
+
 from kivy import Config
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
 
 import plane
+from frontend.client import Client
 from gamebutton import GameButton
 
 
 class Battleship(GridLayout):
-    isGameStarted = False
 
     def __init__(self, **kwargs):
         super(Battleship, self).__init__(**kwargs)
+        self.isGameStarted = False
+        self.client = Client()
         self.ids['opponent'].disabled = True
 
         for c1 in self.children:
@@ -42,7 +46,6 @@ class Battleship(GridLayout):
     def sendMessage(self, message):
         if not self.isGameStarted:
             return
-
         print(message)
         self.onMessage(message)
 
@@ -90,5 +93,12 @@ class Battleship(GridLayout):
 
 class BattleshipApp(App):
 
-    def build(self):
-        return Battleship()
+    async def async_run(self, async_lib=None):
+        self.load_config()
+        self.load_kv(filename=self.kv_file)
+        self.root = Battleship()
+        await asyncio.gather(super(BattleshipApp, self).async_run(async_lib=async_lib), self.root.client.run())
+
+    def stop(self):
+        self.root.client.stop()
+        super(BattleshipApp, self).stop()
