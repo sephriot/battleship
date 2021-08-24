@@ -8,7 +8,7 @@ from backend.game import Game
 
 
 class Server:
-    clearInterval = 5
+    clearInterval = 60
     games = {}  # Id, obiekt gry
     websocketToGame = {}  # websocket, ID Gry
 
