@@ -34,7 +34,6 @@ class Battleship(GridLayout):
 
     def startButtonClick(self):
         self.ids['player'].disabled = True
-        self.ids['opponent'].disabled = False
         self.ids['startGameButton'].disabled = True
         self.ids['gameId'].disabled = True
         print("Click")
@@ -55,22 +54,36 @@ class Battleship(GridLayout):
                 self.sendMessage(Message.HitMessage())
             else:
                 self.sendMessage(Message.MissMessage())
+                self.myTurn()
         elif message.type == Message.BaseMessage.SANK:
             self.sank(self.lastX, self.lastY, {}, 'opponent')
+            self.myTurn()
         elif message.type == Message.BaseMessage.HIT:
             self.ids['opponent'].ids[str(self.lastY)].ids[str(self.lastX)].hit()
+            self.myTurn()
         elif message.type == Message.BaseMessage.MISS:
             self.ids['opponent'].ids[str(self.lastY)].ids[str(self.lastX)].miss()
         elif message.type == Message.BaseMessage.GAME_ID_NOT_ALLOWED:
-            self.ids['player'].disabled = False
-            self.ids['opponent'].disabled = True
-            self.ids['startGameButton'].disabled = False
-            self.ids['gameId'].disabled = False
-            self.isGameStarted = False
+            self.gameIdNotAllowed()
+        elif message.type == Message.BaseMessage.PLAYER_CONNECTED:
+            self.myTurn()
+
+    def myTurn(self):
+        self.ids['opponent'].disabled = False
+
+    def opponentTurn(self):
+        self.ids['opponent'].disabled = True
+
+    def gameIdNotAllowed(self):
+        self.ids['player'].disabled = False
+        self.ids['startGameButton'].disabled = False
+        self.ids['gameId'].disabled = False
+        self.isGameStarted = False
 
     def sendMessage(self, message):
         if not self.isGameStarted:
             return
+        self.opponentTurn()
         self.client.sendMessage(message)
 
     def isShip(self, x: int, y: int):
@@ -100,7 +113,7 @@ class Battleship(GridLayout):
 
         return True
 
-    def sank(self, x, y, visited, tag = "opponent"):
+    def sank(self, x, y, visited, tag="opponent"):
         if (x, y) not in visited:
             visited[(x, y)] = True
             for i in range(y - 1, y + 2):
