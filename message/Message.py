@@ -55,6 +55,7 @@ class SankMessage(BaseMessage):
     def __init__(self):
         self.type = self.SANK
 
+
 class GameIDNowAllowedMessage(BaseMessage):
     def __init__(self):
         self.type = self.GAME_ID_NOT_ALLOWED

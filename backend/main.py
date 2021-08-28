@@ -5,7 +5,7 @@ import time
 import websockets
 
 from backend.game import Game
-from message.Message import BaseMessage, GameIDNowAllowedMessage
+from message.Message import BaseMessage, GameIDNowAllowedMessage, PlayerDisconnectedMessage
 
 
 class Server:
@@ -39,6 +39,9 @@ class Server:
                     try:
                         if m.type == BaseMessage.PLAYER_CONNECTED:
                             self.websocketToGame[websocket] = m.gameId
+                        if m.type == BaseMessage.PLAYER_DISCONNECTED:
+                            await websocket.send(PlayerDisconnectedMessage().toJSON())
+                            continue
                     except AttributeError:
                         await websocket.send("I do not know what you want")
 
