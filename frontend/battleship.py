@@ -39,7 +39,7 @@ class Battleship(GridLayout):
         self.ids['gameId'].disabled = True
         print("Click")
         self.isGameStarted = True
-        self.sendMessage(Message.PlayerConnectedMessage())
+        self.sendMessage(Message.PlayerConnectedMessage(self.ids['gameId'].text))
 
     def onMessage(self, message: Message.BaseMessage):
 
@@ -61,6 +61,12 @@ class Battleship(GridLayout):
             self.ids['opponent'].ids[str(self.lastY)].ids[str(self.lastX)].hit()
         elif message.type == Message.BaseMessage.MISS:
             self.ids['opponent'].ids[str(self.lastY)].ids[str(self.lastX)].miss()
+        elif message.type == Message.BaseMessage.GAME_ID_NOT_ALLOWED:
+            self.ids['player'].disabled = False
+            self.ids['opponent'].disabled = True
+            self.ids['startGameButton'].disabled = False
+            self.ids['gameId'].disabled = False
+            self.isGameStarted = False
 
     def sendMessage(self, message):
         if not self.isGameStarted:
