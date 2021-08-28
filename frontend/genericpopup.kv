@@ -1,0 +1,15 @@
+<GenericPopup>:
+    orientation: 'vertical'
+
+    Label:
+        text: root.messageText
+
+    BoxLayout:
+        height: 30
+        size_hint_y: None
+        Button:
+            text: 'Close'
+            on_release: root.cancel()
+        Button:
+            text: root.approveText
+            on_release: root.approve()
