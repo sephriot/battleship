@@ -56,7 +56,8 @@ class Battleship(GridLayout):
         self.dismissPopup()
 
     def dismissPopup(self):
-        self.popup.dismiss()
+        if self.popup is not None:
+            self.popup.dismiss()
 
     def createPopup(self, title, messageText, approveText):
         if self.popup is not None:
