@@ -8,7 +8,7 @@ import time
 import websockets
 
 from backend.game import Game
-from message.Message import BaseMessage, PlayerConnectedMessage, GameIDNowAllowedMessage
+from message.Message import BaseMessage, GameIDNowAllowedMessage
 
 
 class Server:
