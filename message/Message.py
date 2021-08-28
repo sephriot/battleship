@@ -28,8 +28,9 @@ class PlayerDisconnectedMessage(BaseMessage):
 
 
 class PlayerConnectedMessage(BaseMessage):
-    def __init__(self):
+    def __init__(self, gameId):
         self.type = self.PLAYER_CONNECTED
+        self.gameId = gameId
 
 
 class AttackMessage(BaseMessage):

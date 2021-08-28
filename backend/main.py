@@ -1,9 +1,13 @@
 import asyncio
+import json
 import math
+import string
 import time
+import random
 
 import websockets
 
+from message.Message import BaseMessage, PlayerConnectedMessage
 from backend.game import Game
 
 
@@ -36,11 +40,21 @@ class Server:
         try:
             async for message in websocket:
                 if websocket not in self.websocketToGame:
-                    self.websocketToGame[websocket] = self.gameKeys[math.floor(len(self.websocketToGame) / 2)]
+                    try:
+                        m = BaseMessage(data=json.loads(message))
+                        if m.type == m.PLAYER_CONNECTED:
+                            self.websocketToGame[websocket] = m.gameId
+                        else:
+                            websocket.send("You need to connect to a game first")
+                    except AttributeError:
+                        websocket.send("You need to connect to a game first")
                     if self.websocketToGame[websocket] in self.games:
                         print("Adding player to game", self.websocketToGame[websocket])
                         self.games[self.websocketToGame[websocket]].add_player(websocket)
                     else:
+                        if self.websocketToGame[websocket] == "":
+                            self.websocketToGame[websocket] = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
+                            await websocket.send(PlayerConnectedMessage(self.websocketToGame[websocket]).toJSON())
                         print("Creating game", self.websocketToGame[websocket])
                         self.games[self.websocketToGame[websocket]] = Game()
                         self.games[self.websocketToGame[websocket]].add_player(websocket)
