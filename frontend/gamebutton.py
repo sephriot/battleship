@@ -8,7 +8,7 @@ class GameButton(Button):
     coordinate = DictProperty({"x": 0, "y": 0})
     isShip = BooleanProperty(False)
     wasHit = BooleanProperty(False)
-    sank = BooleanProperty(False)
+    isSunken = BooleanProperty(False)
     sendMessage = ObjectProperty()
     saveLastHitPosition = ObjectProperty()
 
@@ -33,12 +33,15 @@ class GameButton(Button):
         self.setWasHit()
         print("Miss")
 
-    def updateColor(self):
+    def sank(self):
+        self.isSunken = True
+        self.updateColor()
 
-        if self.sank:
-            self.background_color = "#e0b01d"
-        elif self.isShip and self.wasHit:
+    def updateColor(self):
+        if self.isSunken:
             self.background_color = "#a10514"
+        elif self.isShip and self.wasHit:
+            self.background_color = "#e0b01d"
         elif self.isShip and not self.wasHit:
             self.background_color = "#28a745"
         elif not self.isShip and self.wasHit:

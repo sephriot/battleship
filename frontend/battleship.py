@@ -29,6 +29,7 @@ class Battleship(GridLayout):
     def resetGameField(self, field):
         field.isShip = False
         field.wasHit = False
+        field.isSunken = False
         field.updateColor()
 
     def registerGameFieldCallbacks(self, field):
@@ -184,6 +185,7 @@ class Battleship(GridLayout):
                         continue
                     self.ids[tag].ids[str(y)].ids[str(x)].setWasHit()
                     if self.ids[tag].ids[str(y)].ids[str(x)].isShip:
+                        self.ids[tag].ids[str(y)].ids[str(x)].sank()
                         self.sank(j, i, visited, tag)
 
 
