@@ -3,8 +3,10 @@ import asyncio
 from kivy import Config
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.popup import Popup
 
 import plane
+import genericpopup
 from frontend.client import Client
 from gamebutton import GameButton
 from message import Message
@@ -19,6 +21,8 @@ class Battleship(GridLayout):
         self.ids['opponent'].disabled = True
         self.lastX = 0
         self.lastY = 0
+        self.shipNodes = 0
+        self.popup = None
 
         for c1 in self.children:
             for c2 in c1.children:
@@ -27,6 +31,32 @@ class Battleship(GridLayout):
                         if isinstance(c4, GameButton):
                             c4.sendMessage = self.sendMessage
                             c4.saveLastHitPosition = self.saveLastHitPosition
+
+    def resetGame(self):
+        print("Reseting")
+        self.dismissPopup()
+
+    def dismissPopup(self):
+        self.popup.dismiss()
+
+    def createPopup(self, title, messageText, approveText):
+        if self.popup is not None:
+            self.dismissPopup()
+        self.popup = Popup(title=title,
+                           size_hint=(0.6, 0.6),
+                           content=genericpopup.GenericPopup(
+                               approve=self.resetGame,
+                               cancel=self.dismissPopup,
+                               messageText=messageText,
+                               approveText=approveText
+                           ))
+        self.popup.open()
+
+    def updateShipNodes(self):
+        for i in range(1, 11):
+            for j in range(1, 11):
+                if self.isShip(i, j):
+                    self.shipNodes += 1
 
     def saveLastHitPosition(self, x, y):
         self.lastX = x
@@ -38,6 +68,7 @@ class Battleship(GridLayout):
         self.ids['gameId'].disabled = True
         print("Click")
         self.isGameStarted = True
+        self.updateShipNodes()
         self.sendMessage(Message.PlayerConnectedMessage(self.ids['gameId'].text))
 
     def onMessage(self, message: Message.BaseMessage):
@@ -48,9 +79,17 @@ class Battleship(GridLayout):
             self.ids['player'].ids[str(y)].ids[str(x)].setWasHit()
 
             if self.isShip(x, y) and self.isSunken(x, y, {}):
+                self.shipNodes -= 1
                 self.sank(x, y, {}, 'player')
-                self.sendMessage(Message.SankMessage())
+
+                if self.shipNodes == 0:
+                    self.sendMessage(Message.YouWonMessage())
+                    self.createPopup("Game lost", "You lost :(", "Play again")
+                else:
+                    self.sendMessage(Message.SankMessage())
+
             elif self.isShip(x, y):
+                self.shipNodes -= 1
                 self.sendMessage(Message.HitMessage())
             else:
                 self.sendMessage(Message.MissMessage())
@@ -67,6 +106,10 @@ class Battleship(GridLayout):
             self.gameIdNotAllowed()
         elif message.type == Message.BaseMessage.PLAYER_CONNECTED:
             self.myTurn()
+        elif message.type == Message.BaseMessage.YOU_WON:
+            self.createPopup("Game won", "You won!", "Play again")
+        elif message.type == Message.BaseMessage.PLAYER_DISCONNECTED:
+            self.createPopup("Disconnected", "Your partner disconnected!", "Play again")
 
     def myTurn(self):
         self.ids['opponent'].disabled = False
@@ -79,6 +122,7 @@ class Battleship(GridLayout):
         self.ids['startGameButton'].disabled = False
         self.ids['gameId'].disabled = False
         self.isGameStarted = False
+        self.createPopup("Game id missing", "You need to specify game id in the bottom left corner", "OK")
 
     def sendMessage(self, message):
         if not self.isGameStarted:
