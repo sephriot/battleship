@@ -9,12 +9,14 @@ class GameButton(Button):
     isShip = BooleanProperty(False)
     wasHit = BooleanProperty(False)
     sendMessage = ObjectProperty()
+    saveLastHitPosition = ObjectProperty()
 
     def on_release(self):
         super(GameButton, self).on_release()
         self.isShip = not self.isShip
         self.updateColor()
         self.sendMessage(Message.AttackMessage(x=self.coordinate['x'], y=self.coordinate['y']))
+        self.saveLastHitPosition(self.coordinate['x'], self.coordinate['y'])
 
     def setWasHit(self, value=True):
         self.wasHit = value

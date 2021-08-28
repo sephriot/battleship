@@ -7,6 +7,7 @@ from kivy.uix.gridlayout import GridLayout
 import plane
 from frontend.client import Client
 from gamebutton import GameButton
+from message import Message
 
 
 class Battleship(GridLayout):
@@ -14,8 +15,10 @@ class Battleship(GridLayout):
     def __init__(self, **kwargs):
         super(Battleship, self).__init__(**kwargs)
         self.isGameStarted = False
-        self.client = Client()
+        self.client = Client(self.onMessage)
         self.ids['opponent'].disabled = True
+        self.lastX = 0
+        self.lastY = 0
 
         for c1 in self.children:
             for c2 in c1.children:
@@ -23,6 +26,11 @@ class Battleship(GridLayout):
                     for c4 in c3.children:
                         if isinstance(c4, GameButton):
                             c4.sendMessage = self.sendMessage
+                            c4.saveLastHitPosition = self.saveLastHitPosition
+
+    def saveLastHitPosition(self, x, y):
+        self.lastX = x
+        self.lastY = y
 
     def startButtonClick(self):
         self.ids['player'].disabled = True
@@ -31,17 +39,28 @@ class Battleship(GridLayout):
         self.ids['gameId'].disabled = True
         print("Click")
         self.isGameStarted = True
+        self.sendMessage(Message.PlayerConnectedMessage())
 
-    def onMessage(self, message):
-        x = int(message['x'])
-        y = int(message['y'])
-        self.ids['player'].ids[str(y)].ids[str(x)].setWasHit()
-        if self.isShip(x, y) and self.isSunken(x, y, {}):
-            self.sank(x, y, {})
-        elif self.isShip(x, y):
-            self.ids['opponent'].ids[str(y)].ids[str(x)].hit()
-        else:
-            self.ids['opponent'].ids[str(y)].ids[str(x)].miss()
+    def onMessage(self, message: Message.BaseMessage):
+
+        if message.type == Message.BaseMessage.ATTACK:
+            x = message.x
+            y = message.y
+            self.ids['player'].ids[str(y)].ids[str(x)].setWasHit()
+
+            if self.isShip(x, y) and self.isSunken(x, y, {}):
+                self.sank(x, y, {}, 'player')
+                self.sendMessage(Message.SankMessage())
+            elif self.isShip(x, y):
+                self.sendMessage(Message.HitMessage())
+            else:
+                self.sendMessage(Message.MissMessage())
+        elif message.type == Message.BaseMessage.SANK:
+            self.sank(self.lastX, self.lastY, {}, 'opponent')
+        elif message.type == Message.BaseMessage.HIT:
+            self.ids['opponent'].ids[str(self.lastY)].ids[str(self.lastX)].hit()
+        elif message.type == Message.BaseMessage.MISS:
+            self.ids['opponent'].ids[str(self.lastY)].ids[str(self.lastX)].miss()
 
     def sendMessage(self, message):
         if not self.isGameStarted:
@@ -75,7 +94,7 @@ class Battleship(GridLayout):
 
         return True
 
-    def sank(self, x, y, visited):
+    def sank(self, x, y, visited, tag = "opponent"):
         if (x, y) not in visited:
             visited[(x, y)] = True
             for i in range(y - 1, y + 2):
@@ -84,10 +103,9 @@ class Battleship(GridLayout):
                 for j in range(x - 1, x + 2):
                     if j == 0 or j == 11:
                         continue
-                    self.ids['player'].ids[str(y)].ids[str(x)].setWasHit()
-                    self.ids['opponent'].ids[str(y)].ids[str(x)].setWasHit()
-                    if self.ids['opponent'].ids[str(y)].ids[str(x)].isShip:
-                        self.sank(j, i, visited)
+                    self.ids[tag].ids[str(y)].ids[str(x)].setWasHit()
+                    if self.ids[tag].ids[str(y)].ids[str(x)].isShip:
+                        self.sank(j, i, visited, tag)
 
 
 class BattleshipApp(App):
