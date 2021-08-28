@@ -24,16 +24,35 @@ class Battleship(GridLayout):
         self.shipNodes = 0
         self.popup = None
 
+        self.forEachGameField(self.registerGameFieldCallbacks)
+
+    def resetGameField(self, field):
+        field.isShip = False
+        field.wasHit = False
+        field.updateColor()
+
+    def registerGameFieldCallbacks(self, field):
+        field.sendMessage = self.sendMessage
+        field.saveLastHitPosition = self.saveLastHitPosition
+
+    def forEachGameField(self, func):
         for c1 in self.children:
             for c2 in c1.children:
                 for c3 in c2.children:
                     for c4 in c3.children:
                         if isinstance(c4, GameButton):
-                            c4.sendMessage = self.sendMessage
-                            c4.saveLastHitPosition = self.saveLastHitPosition
+                            func(c4)
+
+    def resetUIFields(self):
+        self.ids['player'].disabled = False
+        self.ids['opponent'].disabled = True
+        self.ids['startGameButton'].disabled = False
+        self.ids['gameId'].disabled = False
+        self.isGameStarted = False
 
     def resetGame(self):
-        print("Reseting game")
+        self.resetUIFields()
+        self.forEachGameField(self.resetGameField)
         self.dismissPopup()
 
     def dismissPopup(self):
@@ -103,7 +122,8 @@ class Battleship(GridLayout):
         elif message.type == Message.BaseMessage.GAME_ID_NOT_ALLOWED:
             self.gameIdNotAllowed()
         elif message.type == Message.BaseMessage.PLAYER_CONNECTED:
-            self.myTurn()
+            if self.isGameStarted:
+                self.myTurn()
         elif message.type == Message.BaseMessage.YOU_WON:
             self.createPopup("Game won", "You won!", "Play again")
         elif message.type == Message.BaseMessage.PLAYER_DISCONNECTED:
@@ -116,10 +136,7 @@ class Battleship(GridLayout):
         self.ids['opponent'].disabled = True
 
     def gameIdNotAllowed(self):
-        self.ids['player'].disabled = False
-        self.ids['startGameButton'].disabled = False
-        self.ids['gameId'].disabled = False
-        self.isGameStarted = False
+        self.resetUIFields()
         self.createPopup("GameID missing", "You need to provide not empty GameID", "Play again")
 
     def sendMessage(self, message):
