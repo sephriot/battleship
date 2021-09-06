@@ -3,7 +3,7 @@ import json
 
 import websockets
 
-from message import Message
+import Message
 
 
 class Client:
@@ -15,7 +15,7 @@ class Client:
 
     async def run(self):
         while not self._stop:
-            uri = "ws://localhost:8765"
+            uri = "ws://31.214.157.25:8765"
             async with websockets.connect(uri) as websocket:
                 await asyncio.gather(self.send(websocket), self.receive(websocket))
 

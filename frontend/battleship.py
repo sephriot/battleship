@@ -1,15 +1,12 @@
 import asyncio
 
-from kivy import Config
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.popup import Popup
 
 import plane
-from frontend.client import Client
-from frontend.genericpopup import GenericPopup
+from client import Client
 from gamebutton import GameButton
-from message import Message
+import Message
 
 
 class Battleship(GridLayout):
@@ -63,16 +60,6 @@ class Battleship(GridLayout):
     def createPopup(self, title, messageText, approveText):
         if self.popup is not None:
             self.dismissPopup()
-
-        self.popup = Popup(title=title,
-                           size_hint=(0.6, 0.6),
-                           content=GenericPopup(
-                               approveText=approveText,
-                               messageText=messageText,
-                               cancel=self.dismissPopup,
-                               approve=self.resetGame
-                           ))
-        self.popup.open()
 
     def updateShipNodes(self):
         for i in range(1, 11):
