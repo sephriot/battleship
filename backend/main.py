@@ -4,7 +4,7 @@ import time
 
 import websockets
 
-from backend.game import Game
+from game import Game
 from message.Message import BaseMessage, GameIDNowAllowedMessage
 
 
@@ -71,7 +71,7 @@ class Server:
 
 s = Server()
 asyncio.get_event_loop().run_until_complete(
-    websockets.serve(s.handle, 'localhost', 8765)
+    websockets.serve(s.handle, '0.0.0.0', 8765)
 )
 asyncio.get_event_loop().run_until_complete(
     s.clearOldGames()
