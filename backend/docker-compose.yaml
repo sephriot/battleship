@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  server:
+    image: wojtjk/battleship-server:latest
+    ports:
+      - "8765:8765"
+    restart: always
