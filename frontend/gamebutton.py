@@ -1,7 +1,7 @@
 from kivy.properties import BooleanProperty, DictProperty, ObjectProperty
 from kivy.uix.button import Button
 
-from message import Message
+import Message
 
 
 class GameButton(Button):
@@ -40,12 +40,12 @@ class GameButton(Button):
     def updateColor(self):
 
         if self.isSunken:
-            self.background_color = "#a10514"
+            self.background_color = (0.63, 0.02, 0.08, 1)
         elif self.isShip and self.wasHit:
-            self.background_color = "#e0b01d"
+            self.background_color = (0.88, 0.69, 0.11, 1)
         elif self.isShip and not self.wasHit:
-            self.background_color = "#28a745"
+            self.background_color = (0.16, 0.65, 0.27, 1)
         elif not self.isShip and self.wasHit:
-            self.background_color = "#007bff"
+            self.background_color = (0, 0.48, 1, 1)
         elif not self.isShip and not self.wasHit:
             self.background_color = (0.3, 0.3, 0.3, 1)

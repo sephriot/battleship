@@ -4,10 +4,10 @@
 title = Battleship
 
 # (str) Package name
-package.name = myapp
+package.name = battleship
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.test
+package.domain = org.battleship
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -16,7 +16,7 @@ source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
 
 # (list) List of inclusions using pattern matching
-#source.include_patterns = assets/*,images/*.png
+source.include_patterns = assets/*,images/*.png,images/*.atlas
 
 # (list) Source files to exclude (let empty to not exclude anything)
 #source.exclude_exts = spec
@@ -36,7 +36,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy
+requirements = python3,kivy==2.0.0,websockets,asyncio
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -92,7 +92,7 @@ fullscreen = 0
 #icon.adaptive_background.filename = %(source.dir)s/data/icon_bg.png
 
 # (list) Permissions
-#android.permissions = INTERNET
+android.permissions = INTERNET
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host

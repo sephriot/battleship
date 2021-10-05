@@ -31,7 +31,7 @@
                 id: opponent
         GridLayout:
             cols: 2
-            size_hint: 1, 0.1
+            size_hint: 1, 0.12
             padding: [60, 0, 60, 10]
             spacing: [120, 0]
             BoxLayout:
@@ -44,16 +44,13 @@
                     text: "GameID"
                 TextInput:
                     pos_hint: {'x': 0.2}
-                    size_hint: 0.6, None
-                    width: 200
-                    height: 30
+                    size_hint: 0.6, 1
                     id: gameId
                     multiline: False
                     disabled: True
                     text: 'x'
             BoxLayout:
-                size_hint_y: None
-                height: 40
+                size_hint_y: 1
                 Button:
                     text: 'Reset'
                     id: resetGameButton

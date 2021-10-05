@@ -1,8 +1,8 @@
 from kivy.uix.screenmanager import Screen
 
-from frontend.client import Client
+from client import Client
 from gamebutton import GameButton
-from message import Message
+import Message
 
 import plane
 
