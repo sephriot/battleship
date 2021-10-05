@@ -42,10 +42,13 @@ class Server:
                     except AttributeError:
                         await websocket.send("I do not know what you want")
 
-                    if self.websocketToGame[websocket] == "":
-                        await websocket.send(GameIDNowAllowedMessage().toJSON())
-                        self.websocketToGame.pop(websocket)
-                        continue
+                    try:
+                        if self.websocketToGame[websocket] == "":
+                            await websocket.send(GameIDNowAllowedMessage().toJSON())
+                            self.websocketToGame.pop(websocket)
+                            continue
+                    except KeyError:
+                        print("Game not found")
 
                     if self.websocketToGame[websocket] in self.games:
                         print("Adding player to game", self.websocketToGame[websocket])

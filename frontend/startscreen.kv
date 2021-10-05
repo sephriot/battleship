@@ -1,0 +1,34 @@
+<StartScreen>:
+    canvas.before:
+        Color:
+            rgba: (0.9, 0.9, 0.9, 1)
+        Rectangle:
+            size: self.width, self.height
+            pos: self.x, self.y
+    BoxLayout:
+        size_hint: 0.5, 0.2
+        pos_hint: {'x': 0.25, 'y': 0.4}
+        orientation: 'vertical'
+        padding: [10, 10, 10, 10]
+        Label:
+            size_hint: 1, None
+            height: 30
+            halign: 'center'
+            valign: 'bottom'
+            color: 0,0,0,1
+            text: "GameID"
+        TextInput:
+            pos_hint: {'x': 0.2}
+            size_hint: 0.6, None
+            height: 30
+            id: gameId
+            multiline: False
+            text: "mojagra"
+        Button:
+            pos_hint: {'x': 0.3}
+            size_hint: 0.4, None
+            height: 60
+            text: 'Start'
+            on_release:
+                root.manager.current = 'game'
+                root.manager.get_screen('game').ids.gameId.text = root.ids.gameId.text

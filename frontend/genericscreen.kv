@@ -1,0 +1,23 @@
+<GenericScreen>:
+    canvas.before:
+        Color:
+            rgba: (0.9, 0.9, 0.9, 1)
+        Rectangle:
+            size: self.width, self.height
+            pos: self.x, self.y
+
+    BoxLayout:
+        size_hint: 0.5, 0.2
+        pos_hint: {'x': 0.25, 'y': 0.4}
+        orientation: 'vertical'
+        Label:
+            color: 0,0,0,1
+            text: root.messageText
+
+        BoxLayout:
+            pos_hint: {'x': 0.3}
+            size_hint: 0.4, None
+            height: 60
+            Button:
+                text: 'Main menu'
+                on_release: root.manager.current = 'start'
