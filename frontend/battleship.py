@@ -2,6 +2,7 @@ import asyncio
 
 from kivy import Config
 from kivy.app import App
+from kivy.core.audio import SoundLoader
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
 
@@ -25,6 +26,11 @@ class Battleship(GridLayout):
         self.popup = None
 
         self.forEachGameField(self.registerGameFieldCallbacks)
+
+        self.hitSound = SoundLoader.load('sounds/hit.wav')
+        self.missSound = SoundLoader.load('sounds/miss.wav')
+        self.positiveSound = SoundLoader.load('sounds/positive.wav')
+        self.negativeSound = SoundLoader.load('sounds/negative.wav')
 
     def resetGameField(self, field):
         field.isShip = False
@@ -104,23 +110,29 @@ class Battleship(GridLayout):
                 self.sank(x, y, {}, 'player')
                 self.shipNodes -= 1
                 self.sendMessage(Message.SankMessage())
+                self.negativeSound.play()
                 if self.shipNodes == 0:
                     self.sendMessage(Message.YouWonMessage())
                     self.createPopup("Game lost", "You lost :(", "Play again")
             elif self.isShip(x, y):
                 self.shipNodes -= 1
                 self.sendMessage(Message.HitMessage())
+                self.hitSound.play()
             else:
                 self.sendMessage(Message.MissMessage())
+                self.missSound.play()
                 self.myTurn()
         elif message.type == Message.BaseMessage.SANK:
             self.sank(self.lastX, self.lastY, {}, 'opponent')
+            self.positiveSound.play()
             self.myTurn()
         elif message.type == Message.BaseMessage.HIT:
             self.ids['opponent'].ids[str(self.lastY)].ids[str(self.lastX)].hit()
+            self.hitSound.play()
             self.myTurn()
         elif message.type == Message.BaseMessage.MISS:
             self.ids['opponent'].ids[str(self.lastY)].ids[str(self.lastX)].miss()
+            self.missSound.play()
         elif message.type == Message.BaseMessage.GAME_ID_NOT_ALLOWED:
             self.gameIdNotAllowed()
         elif message.type == Message.BaseMessage.PLAYER_CONNECTED:
