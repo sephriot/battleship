@@ -13,10 +13,10 @@ package.domain = org.battleship
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas
+source.include_exts = py,png,jpg,kv,atlas,wav
 
 # (list) List of inclusions using pattern matching
-source.include_patterns = assets/*,images/*.png,images/*.atlas
+source.include_patterns = assets/*,images/*.png,images/*.atlas,sounds/*.wav
 
 # (list) Source files to exclude (let empty to not exclude anything)
 #source.exclude_exts = spec
