@@ -2,6 +2,7 @@ import asyncio
 
 from kivy import Config
 from kivy.app import App
+from kivy.core.audio import SoundLoader
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager
 
