@@ -1,63 +1,64 @@
 #: include plane.kv
-#: include genericpopup.kv
+#: include genericscreen.kv
 
 <Battleship>:
-    canvas.before:
-        Color:
-            rgba: (0.9, 0.9, 0.9, 1)
-        Rectangle:
-            size: self.width, self.height
-            pos: self.x, self.y
-    rows: 3
     GridLayout:
-        cols: 2
-        size_hint: 1, 0.05
-        padding: [0, 20, 0, 0]
-        Label:
-            color: 0,0,0
-            text: 'Player1'
-            bold: True
-        Label:
-            color: 0,0,0
-            text: 'Player2'
-            bold: True
-    GridLayout:
-        cols: 2
-        size_hint: 1, 1
-        padding: [0, 0, 0, -10]
-        Plane:
-            id: player
-        Plane:
-            id: opponent
-    GridLayout:
-        cols: 2
-        size_hint: 1, 0.1
-        padding: [60, 0, 60, 10]
-        spacing: [120, 0]
-        BoxLayout:
-            orientation: 'vertical'
-            padding: [0, -10, 0, 0]
+        canvas.before:
+            Color:
+                rgba: (0.9, 0.9, 0.9, 1)
+            Rectangle:
+                size: self.width, self.height
+                pos: self.x, self.y
+        rows: 3
+        GridLayout:
+            cols: 2
+            size_hint: 1, 0.05
+            padding: [0, 20, 0, 0]
             Label:
-                halign: 'center'
-                valign: 'bottom'
-                color: 0,0,0,1
-                text: "GameID"
-            TextInput:
-                pos_hint: {'x': 0.2}
-                size_hint: 0.6, None
-                width: 200
-                height: 30
-                id: gameId
-                multiline: False
-                text: "mojagra"
-        BoxLayout:
-            size_hint_y: None
-            height: 40
-            Button:
-                text: 'Reset'
-                id: resetGameButton
-                on_release: root.resetGame()
-            Button:
-                text: 'Start'
-                id: startGameButton
-                on_release: root.startButtonClick()
+                color: 0,0,0
+                text: 'Player1'
+                bold: True
+            Label:
+                color: 0,0,0
+                text: 'Player2'
+                bold: True
+        GridLayout:
+            cols: 2
+            size_hint: 1, 1
+            padding: [0, 0, 0, -10]
+            Plane:
+                id: player
+            Plane:
+                id: opponent
+        GridLayout:
+            cols: 2
+            size_hint: 1, 0.1
+            padding: [60, 0, 60, 10]
+            spacing: [120, 0]
+            BoxLayout:
+                orientation: 'vertical'
+                padding: [0, -10, 0, 0]
+                Label:
+                    halign: 'center'
+                    valign: 'bottom'
+                    color: 0,0,0,1
+                    text: "GameID"
+                TextInput:
+                    pos_hint: {'x': 0.2}
+                    size_hint: 0.6, None
+                    width: 200
+                    height: 30
+                    id: gameId
+                    multiline: False
+                    text: "mojagra"
+            BoxLayout:
+                size_hint_y: None
+                height: 40
+                Button:
+                    text: 'Reset'
+                    id: resetGameButton
+                    on_release: root.resetGame()
+                Button:
+                    text: 'Start'
+                    id: startGameButton
+                    on_release: root.startButtonClick()
