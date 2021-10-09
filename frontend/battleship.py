@@ -94,7 +94,7 @@ class Battleship(Screen):
                 self.negativeSound.play()
                 if self.shipNodes == 0:
                     self.sendMessage(Message.YouWonMessage())
-                    self.manager.current = 'victory'
+                    self.manager.current = 'loss'
             elif self.isShip(x, y):
                 self.shipNodes -= 1
                 self.sendMessage(Message.HitMessage())
@@ -120,7 +120,7 @@ class Battleship(Screen):
             if self.isGameStarted:
                 self.myTurn()
         elif message.type == Message.BaseMessage.YOU_WON:
-            self.manager.current = 'loss'
+            self.manager.current = 'victory'
         elif message.type == Message.BaseMessage.PLAYER_DISCONNECTED:
             self.manager.current = 'disconnect'
 

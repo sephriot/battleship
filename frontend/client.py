@@ -15,7 +15,7 @@ class Client:
 
     async def run(self):
         while not self._stop:
-            uri = "ws://localhost:8765"
+            uri = "ws://185.158.251.137:8765"
             async with websockets.connect(uri) as websocket:
                 await asyncio.gather(self.send(websocket), self.receive(websocket))
 
